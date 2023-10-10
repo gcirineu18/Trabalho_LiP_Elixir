@@ -33,25 +33,25 @@ defmodule TreeNode do
     end
 
     av =
-      TreeNode.tree( :a, 111,
-         TreeNode.tree( :b, 55,
-           TreeNode.tree( :x, 100,
-             TreeNode.tree( :z, 56,nil,nil),
-             TreeNode.tree( :w, 23,nil,nil)
+      ( :a, 111,
+         ( :b, 55,
+           ( :x, 100,
+             ( :z, 56,nil,nil),
+             ( :w, 23,nil,nil)
            ),
-           TreeNode.tree( :y, 105,
+           ( :y, 105,
            nil,
-            TreeNode.tree( :r, 77,nil,nil)
+            ( :r, 77,nil,nil)
           )
          ),
-         TreeNode.tree( :c, 123,
-            TreeNode.tree( :d, 119,
-              TreeNode.tree( :g, 44,nil,nil),
-              TreeNode.tree( :h, 50,
-                TreeNode.tree( :i, 5,nil,nil),
-                TreeNode.tree( :j, 6,nil,nil)
+         ( :c, 123,
+            ( :d, 119,
+              ( :g, 44,nil,nil),
+              ( :h, 50,
+                ( :i, 5,nil,nil),
+                ( :j, 6,nil,nil)
               )
             ),
-            TreeNode.tree( :e, 133,nil,nil)
+            ( :e, 133,nil,nil)
          )
       )
