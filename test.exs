@@ -1,57 +1,48 @@
-defmodule TreeNode do
-  defstruct x:0, y:0, key:nil, val:nil, left:nil, right: nil
+defmodule TreeTraversal do
+  @scale 30
 
-  def tree(x, y, key, val, left, right) do
-    %TreeNode(x: x,y: y, key: key, val: val, left: left, right: right)
+  def depth_first(tree) do
+    depth_first(tree,  1, 30, 0, 0)
+  end
 
-    def depthFirst(tree, level, leftLim, root_x, rightLim)
-    case tree do
-      %{:tree | key: key, val: val, left: nil, right: nil } ->
-        x = root_x= rightLim=leftLim
-        y = @scale*level
-      # retornando a tupla com o nó e as coordenadas
+  defp depth_first(%{key: key, value: value, left: nil, right: nil}, level, left_lim, _root_x, _right_lim) do
+    x = _root_x = _right_lim = left_lim
+    y = @scale * level
+    [{key, value, x, y}]
+  end
 
-        { %{key: key, val: val, left: left, right: right}, x,y}
+  defp depth_first(%{key: key, value: value, left: left, right: nil}, level, left_lim, root_x, right_lim) do
+    x = root_x
+    y = @scale * level
+    [{key, value, x, y} | depth_first(left, level + 1, left_lim, root_x, right_lim)]
+  end
 
-      %{:tree | key: key, val: val, left: l, right: nil } ->
-        x=root_x
-        y= @scale*level
-        depthFirst( l, level+1, leftLim, root_x, rightLim)
+  defp depth_first(%{key: key, value: value, left: nil, right: right}, level, left_lim, root_x, right_lim) do
+    x = root_x
+    y = @scale * level
+    [{key, value, x, y} | depth_first(right, level + 1, left_lim, root_x, right_lim + @scale)]
+  end
 
-      %{:tree | key: key, val: val, left: nil, right: r } ->
-        x=root_x
-        y= @scale*level
-        depthFirst( r, level+1, leftLim, root_x, rightLim)
+  defp depth_first(%{key: _key, value: _value, left: left, right: right}, level, left_lim, root_x, right_lim) do
 
-      %{:tree | key: key, val: val, left: l, right: r } ->
-        y=@scale*level
-        depthFirst( l, level+1, leftLim, lroot_x, lrightLim)
-        rleftLim = rightLim+@scale
-        depthFirst( r, level+1, rleftLim, rroot_x, rightLim)
-        x=root_x=(lroot_x+rroot_x)/2
+    y = @scale * level
+    [{_key, _value, l_root_x, _l_right_lim}] = depth_first(left, level + 1, left_lim, root_x, (left_lim + root_x) / 2)
 
-    end
+    [{key, value, r_root_x, r_left_lim}] = depth_first(right, level + 1, (root_x + right_lim) / 2, root_x, right_lim)
 
-    av =
-      ( :a, 111,
-         ( :b, 55,
-           ( :x, 100,
-             ( :z, 56,nil,nil),
-             ( :w, 23,nil,nil)
-           ),
-           ( :y, 105,
-           nil,
-            ( :r, 77,nil,nil)
-          )
-         ),
-         ( :c, 123,
-            ( :d, 119,
-              ( :g, 44,nil,nil),
-              ( :h, 50,
-                ( :i, 5,nil,nil),
-                ( :j, 6,nil,nil)
-              )
-            ),
-            ( :e, 133,nil,nil)
-         )
-      )
+    x = (l_root_x + r_root_x) / 2
+
+    [{key, value, x, y} | depth_first(right, level + 1, r_left_lim, r_root_x, right_lim)]
+  end
+end
+
+tree =
+  %{
+    key: 1,
+    value: "A",
+    left: %{key: 2, value: "B", left: nil, right: nil},
+    right: %{key: 3, value: "C", left: nil, right: nil}
+  }
+
+result = TreeTraversal.depth_first(tree)
+IO.inspect(result)
