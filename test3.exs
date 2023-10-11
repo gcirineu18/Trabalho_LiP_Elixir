@@ -1,51 +1,69 @@
 
+=======
+defmodule TreeNode do
+  defstruct key: 0, val: 0, left: nil, right: nil
 
-defmodule TreeTraversal do
-  @scale 30
-
-  def depth_first(tree) do
-    depth_first(tree, 0, 0, 0, 0)
-  end
-
-  defp depth_first(%{key: key, value: value, left: nil, right: nil}, level, left_lim, _root_x, _right_lim) do
-    x = _root_x= _right_lim=left_lim
-    y = @scale * level
-    [{key, value, x, y}]
-  end
-
-  defp depth_first(%{key: key, value: value, left: left, right: nil}, level, left_lim, root_x, right_lim) do
-    x = root_x
-    y = @scale * level
-    depth_first(left, level + 1, left_lim, root_x, right_lim)
-  end
-
-  defp depth_first(%{key: key, value: value, left: nil, right: right}, level, left_lim, root_x, right_lim) do
-    x = root_x
-    y = @scale * level
-     depth_first(right, level + 1, left_lim, root_x, right_lim + @scale)
-  end
-
-  defp depth_first(%{key: key, value: value, left: left, right: right}, level, left_lim, root_x, right_lim) do
-    y = @scale * level
-
-     depth_first(left, level + 1, left_lim, l_root_x, l_right_lim)
-
-     r_left_lim = l_right_lim+ @scale
-
-     depth_first(right, level + 1, r_left_lim , r_root_x, right_lim)
-    x = (l_root_x + r_root_x)/2
-
-
+  def tree(key, val, left, right) do
+    %TreeNode{key: key, val: val, left: left, right: right}
   end
 end
 
-tree =
-  %{
-    key: 1,
-    value: "A",
-    left: %{key: 2, value: "B", left: nil, right: nil},
-    right: %{key: 3, value: "C", left: nil, right: nil}
-  }
+defmodule DepthFirst do
+  @scale 30
 
-result = TreeTraversal.depth_first(tree)
-IO.inspect(result)
+  def depthFirst(nil, _level, _leftLim, _root_x, _rightLim) do
+    {nil, 0.0, 0.0}
+  end
+
+  def depthFirst(%TreeNode{key: key, val: val, left: l, right: r}, level, leftLim, root_x, rightLim) do
+    y = @scale * level
+
+    {l_node, lroot_x, lrightLim} =
+      if l != nil do
+        depthFirst(l, level + 1, leftLim, root_x, rightLim)
+      else
+        {nil, root_x, root_x}
+      end
+
+    rleftLim = lrightLim + @scale
+    {r_node, rroot_x, _} =
+      if r != nil do
+        depthFirst(r, level + 1, rleftLim, rleftLim, rightLim)
+      else
+        {nil, rleftLim, rightLim}
+      end
+
+    x = (lroot_x + rroot_x) / 2
+    { %{key: key, val: val}, x, y }
+  end
+end
+
+# Correção na definição da árvore
+tree =
+  TreeNode.tree(:a, 111,
+    TreeNode.tree(:b, 55,
+      TreeNode.tree(:x, 100,
+        TreeNode.tree(:z, 56, nil, nil),
+        TreeNode.tree(:w, 23, nil, nil)
+      ),
+      TreeNode.tree(:y, 105, nil,
+        TreeNode.tree(:r, 77, nil, nil)
+      )
+    ),
+    TreeNode.tree(:c, 123,
+      TreeNode.tree(:d, 119,
+        TreeNode.tree(:g, 44, nil, nil),
+        TreeNode.tree(:h, 50,
+          TreeNode.tree(:i, 5, nil, nil),
+          TreeNode.tree(:j, 6, nil, nil)
+        )
+      ),
+      TreeNode.tree(:e, 133, nil, nil)
+    )
+  )
+
+# Correção na chamada da função
+fun = DepthFirst.depthFirst(tree, 1, 0, 0, 0)
+
+IO.inspect(fun)
+>>>>>>> 5cf9f9b1e564e8341d8f4c4dc9f5151a6b01170e
