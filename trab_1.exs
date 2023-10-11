@@ -1,4 +1,3 @@
-
 defmodule TreeNode do
   defstruct key: 0, val: 0, left: nil, right: nil
 
@@ -14,10 +13,32 @@ defmodule DepthFirst do
     {nil, 0.0, 0.0}
   end
 
+  def depthFirst(%TreeNode{key: key, val: val, left: nil, right: nil}, level, leftLim, _root_x, _rightLim) do
+    x = leftLim
+    y =@scale * level
+    IO.inspect({ %{key: key, val: val}, x, y })
+  end
+  def depthFirst(%TreeNode{key: key, val: val, left: l, right: nil}, level, leftLim, root_x, rightLim) do
+      x = root_x
+      y = @scale * level
+
+      IO.inspect({ %{key: key, val: val}, x, y })
+
+      depthFirst(l, level + 1, leftLim, root_x, rightLim)
+      #{l_node, root_x, rightLim} = depthFirst(l, level + 1, leftLim, root_x, rightLim)
+  end
+  def depthFirst(%TreeNode{key: key, val: val, left: nil, right: r}, level, leftLim, root_x, rightLim) do
+        x = root_x
+        y = @scale * level
+        IO.inspect({ %{key: key, val: val}, x, y })
+
+        depthFirst(r, level + 1, leftLim, root_x, rightLim)
+        #{r_node, root_x, rightLim} = depthFirst(r, level + 1, leftLim, root_x, rightLim)
+  end
   def depthFirst(%TreeNode{key: key, val: val, left: l, right: r}, level, leftLim, root_x, rightLim) do
     y = @scale * level
 
-    {l_node, lroot_x, lrightLim} =
+    {_l_node, lroot_x, lrightLim} =
       if l != nil do
         depthFirst(l, level + 1, leftLim, root_x, rightLim)
       else
@@ -25,7 +46,7 @@ defmodule DepthFirst do
       end
 
     rleftLim = lrightLim + @scale
-    {r_node, rroot_x, _} =
+    {_r_node, rroot_x, _} =
       if r != nil do
         depthFirst(r, level + 1, rleftLim, rleftLim, rightLim)
       else
