@@ -1,5 +1,4 @@
 
-=======
 defmodule TreeNode do
   defstruct key: 0, val: 0, left: nil, right: nil
 
@@ -34,7 +33,8 @@ defmodule DepthFirst do
       end
 
     x = (lroot_x + rroot_x) / 2
-    { %{key: key, val: val}, x, y }
+    IO.inspect({ %{key: key, val: val}, x, y })
+    #{ %{key: key, val: val}, x, y }
   end
 end
 
@@ -63,7 +63,6 @@ tree =
   )
 
 # Correção na chamada da função
-fun = DepthFirst.depthFirst(tree, 1, 0, 0, 0)
+fun = DepthFirst.depthFirst(tree, 1, 30, 0, 0)
 
 IO.inspect(fun)
->>>>>>> 5cf9f9b1e564e8341d8f4c4dc9f5151a6b01170e

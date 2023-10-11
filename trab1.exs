@@ -61,7 +61,7 @@ defmodule DepthFirst do
 end
 
 tree =
-  %{ :a, 111,
+  %{ :a,111,
      %{ :b, 55,
        %{ :x, 100,
          %{ :z, 56,nil,nil},
