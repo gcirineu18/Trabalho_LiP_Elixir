@@ -15,37 +15,42 @@ defmodule DepthFirst do
 
   def depthFirst(%TreeNode{key: key, val: val, left: nil, right: nil}, level, leftLim) do
     y = @scale * level
-    x = leftLim + @scale
+    x = root_x = rightLim = leftLim
     IO.inspect({ %{key: key, val: val}, x, y })
-    {x, x}
+    {root_x, rightLim}
   end
 
   def depthFirst(%TreeNode{key: key, val: val, left: l, right: nil}, level, leftLim) do
     { root_x, rightLim} = depthFirst(l, level + 1, leftLim)
     y = @scale * level
-    x = root_x + @scale
+    x = root_x
     IO.inspect({ %{key: key, val: val}, x, y })
-    {x, rightLim}
+    { root_x, rightLim}
   end
 
   def depthFirst(%TreeNode{key: key, val: val, left: nil, right: r}, level, leftLim) do
     {root_x, rightLim} = depthFirst(r, level + 1, leftLim)
     y = @scale * level
-    x = root_x + @scale
+    x = root_x
     IO.inspect({ %{key: key, val: val}, x, y })
-    {x, rightLim}
+    {root_x, rightLim}
   end
 
   def depthFirst(%TreeNode{key: key, val: val, left: l, right: r}, level, leftLim) do
     y = @scale * level
     {lroot_x, lrightLim} = depthFirst(l, level + 1, leftLim)
 
-    rleftLim = lrightLim
+    #IO.inspect({lroot_x, lrightLim})
+    rleftLim = lrightLim + @scale
     {rroot_x, rrightLim} = depthFirst(r, level + 1, rleftLim)
 
-    x = (lrightLim + rleftLim) / 2.0
-    IO.inspect({ %{key: key, val: val}, x, y })
 
+       x = (rroot_x + lroot_x) / 2
+
+
+
+
+    IO.inspect({ %{key: key, val: val}, x, y })
     {x, rrightLim}
   end
 end
@@ -75,4 +80,4 @@ tree =
   )
 
 # Call the depthFirst function
-DepthFirst.depthFirst(tree, 1, 0.0)
+DepthFirst.depthFirst(tree, 1, 30)
