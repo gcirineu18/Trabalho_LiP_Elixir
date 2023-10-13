@@ -1,0 +1,45 @@
+
+A compiler consists of three parts:
+
+1. Tokenizer - reads a sequence of characters
+and outputs a sequence of tokens
+
+2. Parser - The parser reads a sequence of tokens
+and outputs an abstract syntax tree. This is some
+times called a parse tree
+
+3. Code generator - The code generator traverses the syntax 
+tree and generates low-level instructions for a real machine
+or an abstract machine.
+
+
+To parse a program, start with <Prog> and expand until finding
+a sequence of tokens that matches the input
+
+The parser output is a tree, i.e, a nested record. It is 
+abstract because it is encoded as a data structure in the
+languagem and no longer in terms of token. The parser's 
+role is to extract the structure from the flat input. with
+out this structure, it is extremely difficult to write the
+code generator and code optimizers
+
+The parser’s input language (which is a token sequence):
+Prog ::= program Id ; Stat end
+Stat ::= begin { Stat ; } Stat end
+| Id := Expr
+| if Comp then Stat else Stat
+| while Comp do Stat
+| read Id
+| write Expr
+Comp ::= { <Expr> <COP>} <Expr> 
+Expr ::= { <Term> <EOP> } <Term>
+Term ::= { <Fact> <TOP> } <Fact>
+Fact ::= <Integer>|<Id> | ( <Expr> )
+COP ::= ´==´ | ´!=´ | ´>´ | ´<´ | ´=<´ | ´>=´
+EOP ::= ´+´ | ´-´
+TOP ::= ´*´ | ´/´
+Integer ::= (integer)
+Id ::= (atom)
+
+
+

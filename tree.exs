@@ -44,11 +44,7 @@ defmodule DepthFirst do
     rleftLim = lrightLim + @scale
     {rroot_x, rrightLim} = depthFirst(r, level + 1, rleftLim)
 
-
        x = (rroot_x + lroot_x) / 2
-
-
-
 
     IO.inspect({ %{key: key, val: val}, x, y })
     {x, rrightLim}
