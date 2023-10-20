@@ -35,6 +35,75 @@ defmodule Parser do
       %NoBinario{operator: operator, left: left, right: right}
     end
   end
+def stat(s1) do
+  [t | s2]=s1
+  case t do
+  :if ->
+    {c,s3} = comp(s2)
+    [head4 | s4]=s3
+    if head4 == :then do
+      {x1,s5}=stat(s4)
+      [head5 | s6]=s5
+      if head5 == :else do
+        {x2,sn}=stat(s6)
+        {NoEstado.new(:if, c, x1, x2), sn}
+      else
+        {NoBinario.new(:if, c, x1), s5}
+      end
+    end
+
+  :while ->
+    {c, s3} = comp(s2)
+    [head6|s4] = s3
+    if head6 == :do do
+      {x,sn} = stat(s4)
+      {NoBinario.new(:while, c, x), sn}
+    end
+
+  :read ->
+    {resul,i,sn} = id(s2)
+    if resul do
+      {NoUnario.new(:read, i), sn}
+    end
+
+  :write ->
+    {e,sn} = expr(s2)
+    {NoUnario.new(:read, e), sn}
+
+  _ ->
+    if isIdent(t) do
+      [head7|s3] = s2
+      if head7 == ':=' do
+        {e, sn} = expr(s3)
+        {NoBinario.new(':=', t, e), sn}
+      else
+        raise "token não identificado"
+      end
+    end
+  end
+end
+
+def fact(s1) do
+   case s1 do
+     [t|s2] ->
+       if is_integer(t) || isIdent(t) do
+
+         {t,s2}
+       else
+
+       case s1 do
+         ['('|^s2] ->
+         {e ,s3} = expr(s2)
+         case s3 do
+           [')'|sn] ->
+             {e,sn}
+         end
+
+       end
+       end
+   end
+ end
+
 
 def prog(s1) do
 
@@ -96,26 +165,7 @@ def top(y) do
   y == '*' or y == '/'
 end
 
-def fact(s1) do
-   case s1 do
-     [t|s2] ->
-       if is_integer(t) || isIdent(t) do
 
-         {t,s2}
-       else
-
-       case s1 do
-         ['('|^s2] ->
-         {e ,s3} = expr(s2)
-         case s3 do
-           [')'|sn] ->
-             {e,sn}
-         end
-
-       end
-       end
-   end
- end
 
 def term(s1) do
 
@@ -148,58 +198,7 @@ def sequence(nonTerm, sep, s1) do
  end
 end
 
-
-
-def stat(s1) do
-  [t | s2]=s1
-  case t do
-  :if ->
-    {c,s3} = comp(s2)
-    [head4 | s4]=s3
-    if head4 == :then do
-      {x1,s5}=stat(s4)
-      [head5 | s6]=s5
-      if head5 == :else do
-        {x2,sn}=stat(s6)
-        {NoEstado.new(:if, c, x1, x2), sn}
-      else
-        {NoBinario.new(:if, c, x1), s5}
-      end
-    end
-
-  :while ->
-    {c, s3} = comp(s2)
-    [head6|s4] = s3
-    if head6 == :do do
-      {x,sn} = stat(s4)
-      {NoBinario.new(:while, c, x), sn}
-    end
-
-  :read ->
-    {resul,i,sn} = id(s2)
-    if resul do
-      {NoUnario.new(:read, i), sn}
-    end
-
-  :write ->
-    {e,sn} = expr(s2)
-    {NoUnario.new(:read, e), sn}
-
-  _ ->
-    if isIdent(t) do
-      [head7|s3] = s2
-      if head7 == ':=' do
-        {e, sn} = expr(s3)
-        {NoBinario.new(':=', t, e), sn}
-      else
-        raise "token não identificado"
-      end
-    end
-  end
 end
-
-end
-
 
 
 
